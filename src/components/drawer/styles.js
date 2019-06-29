@@ -22,7 +22,10 @@ const styles = () => {
       ...theme.mixins.toolbar,
       justifyContent: 'flex-end'
     },
-    backgroundColor: 'primary'
+    backgroundColor: 'primary',
+    textMenu: {
+      color: '#ffffff'
+    }
   };
 };
 export default styles;

@@ -4,13 +4,16 @@ import theme from '../../Theme';
 import styles from './styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import ConfigButton from '../../components/configButtons/ConfigButton';
 
 function ConfigView({ classes }) {
   const [flowTime, setFlowTime] = useState(0);
   const [vases, setVases] = useState([]);
+  const [variantButton, setVariantButton] = useState({
+    manual: true,
+    automatico: false
+  });
   const vasesArray = [
     { name: 'Vaso1', value: 45 },
     { name: 'Vaso2', value: 30 },
@@ -21,6 +24,10 @@ function ConfigView({ classes }) {
   useEffect(() => {
     if (vases.length === 0) setVases(vasesArray);
   }, [vases, vasesArray]);
+
+  const changeButton = name => event => {
+    setVariantButton({ [name]: !event.target.value });
+  };
 
   function incrementValueVases(name) {
     const mock = vases.map(data => {
@@ -68,10 +75,26 @@ function ConfigView({ classes }) {
             Modo de operação
           </Typography>
           <Grid item className={classes.marginVertical}>
-            <ButtonGroup color="primary" size="large">
-              <Button>Manual</Button>
-              <Button>Automatico</Button>
-            </ButtonGroup>
+            <Button
+              color="primary"
+              size="large"
+              variant={variantButton.manual ? 'contained' : 'outlined'}
+              style={{ borderRadius: 0 }}
+              value={variantButton.manual}
+              onClick={changeButton('manual')}
+            >
+              Manual
+            </Button>
+            <Button
+              color="primary"
+              size="large"
+              variant={variantButton.automatico ? 'contained' : 'outlined'}
+              style={{ borderRadius: 0 }}
+              value={variantButton.automatico}
+              onClick={changeButton('automatico')}
+            >
+              Automatico
+            </Button>
           </Grid>
         </Grid>
         <Grid

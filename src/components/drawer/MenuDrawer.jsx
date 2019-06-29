@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles, ThemeProvider } from '@material-ui/styles';
+import { NavLink } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
@@ -15,9 +16,6 @@ import styles from './styles';
 import theme from '../../Theme';
 
 function MenuDrawer({ classes, open, handleDrawerClose }) {
-  function teste() {
-    alert('ola');
-  }
   return (
     <ThemeProvider theme={theme}>
       <Drawer
@@ -39,24 +37,39 @@ function MenuDrawer({ classes, open, handleDrawerClose }) {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={e => teste()}>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="DashBoard" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <HistoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="Hitorico" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Configurações" />
-          </ListItem>
+          <NavLink exact to="/" style={{ textDecoration: 'none' }}>
+            <ListItem button onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="DashBoard"
+                primaryTypographyProps={{ className: classes.textMenu }}
+              />
+            </ListItem>
+          </NavLink>
+          <NavLink to="/" style={{ textDecoration: 'none' }}>
+            <ListItem button onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <HistoryIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Hitorico"
+                primaryTypographyProps={{ className: classes.textMenu }}
+              />
+            </ListItem>
+          </NavLink>
+          <NavLink to="/config" style={{ textDecoration: 'none' }}>
+            <ListItem button onClick={handleDrawerClose}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Configurações"
+                primaryTypographyProps={{ className: classes.textMenu }}
+              />
+            </ListItem>
+          </NavLink>
         </List>
       </Drawer>
     </ThemeProvider>
