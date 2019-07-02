@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,11 +13,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+const SignInLink = React.forwardRef((props, ref) => (
+  <Link to="/entrar" innerRef={ref} {...props} />
+));
+
 function AppBarView({ classes }) {
   const [login, setLogin] = useState(false);
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const openMenu = Boolean(anchorEl);
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -53,7 +57,9 @@ function AppBarView({ classes }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Smart Garden
+            <Link style={{ color: 'inherit', textDecoration: 'none' }} to="/">
+              Smart Garden
+            </Link>
           </Typography>
           {login ? (
             <div>
@@ -78,7 +84,7 @@ function AppBarView({ classes }) {
                   vertical: 'top',
                   horizontal: 'right'
                 }}
-                open={openMenu}
+                open={!!anchorEl}
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Perfil</MenuItem>
@@ -86,7 +92,7 @@ function AppBarView({ classes }) {
               </Menu>
             </div>
           ) : (
-            <Button onClick={logon} color="inherit">
+            <Button component={SignInLink} color="inherit">
               Entrar
             </Button>
           )}
