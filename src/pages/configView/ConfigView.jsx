@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withStyles, ThemeProvider } from '@material-ui/styles';
-import theme from '../../Theme';
+import { withStyles } from '@material-ui/styles';
 import styles from './styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -62,82 +61,80 @@ function ConfigView({ classes }) {
     }
   }
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container direction="column">
-        <Grid
-          item
-          container
-          direction="column"
-          justify="center"
-          className={classes.marginVertical}
-        >
-          <Typography variant="h4" color="secondary">
-            Modo de operação
-          </Typography>
-          <Grid item className={classes.marginVertical}>
-            <Button
-              color="primary"
-              size="large"
-              variant={variantButton.manual ? 'contained' : 'outlined'}
-              style={{ borderRadius: 0 }}
-              value={variantButton.manual}
-              onClick={changeButton('manual')}
-            >
-              Manual
-            </Button>
-            <Button
-              color="primary"
-              size="large"
-              variant={variantButton.automatico ? 'contained' : 'outlined'}
-              style={{ borderRadius: 0 }}
-              value={variantButton.automatico}
-              onClick={changeButton('automatico')}
-            >
-              Automatico
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          container
-          direction="column"
-          justify="center"
-          className={classes.marginVertical}
-        >
-          <Typography variant="h4" color="secondary">
-            Modo Automatico
-          </Typography>
-          <ConfigButton
-            title="tempo de vazão"
-            value={flowTime}
-            sufix="seg"
-            incrementValue={incrementFlowTime}
-            decrementValue={decrementFlowTime}
-          />
-        </Grid>
-        <Grid
-          item
-          container
-          direction="column"
-          justify="center"
-          className={classes.marginVertical}
-        >
-          <Typography variant="h5" color="primary">
-            Umidade Ideal:
-          </Typography>
-          {vases.map(data => (
-            <ConfigButton
-              key={data.name}
-              title={data.name}
-              value={data.value}
-              incrementValue={incrementValueVases}
-              decrementValue={decrementValueVases}
-              sufix="%"
-            />
-          ))}
+    <Grid container direction="column">
+      <Grid
+        item
+        container
+        direction="column"
+        justify="center"
+        className={classes.marginVertical}
+      >
+        <Typography variant="h4" color="secondary">
+          Modo de operação
+        </Typography>
+        <Grid item className={classes.marginVertical}>
+          <Button
+            color="primary"
+            size="large"
+            variant={variantButton.manual ? 'contained' : 'outlined'}
+            style={{ borderRadius: 0 }}
+            value={variantButton.manual}
+            onClick={changeButton('manual')}
+          >
+            Manual
+          </Button>
+          <Button
+            color="primary"
+            size="large"
+            variant={variantButton.automatico ? 'contained' : 'outlined'}
+            style={{ borderRadius: 0 }}
+            value={variantButton.automatico}
+            onClick={changeButton('automatico')}
+          >
+            Automatico
+          </Button>
         </Grid>
       </Grid>
-    </ThemeProvider>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="center"
+        className={classes.marginVertical}
+      >
+        <Typography variant="h4" color="secondary">
+          Modo Automatico
+        </Typography>
+        <ConfigButton
+          title="tempo de vazão"
+          value={flowTime}
+          sufix="seg"
+          incrementValue={incrementFlowTime}
+          decrementValue={decrementFlowTime}
+        />
+      </Grid>
+      <Grid
+        item
+        container
+        direction="column"
+        justify="center"
+        className={classes.marginVertical}
+      >
+        <Typography variant="h5" color="primary">
+          Umidade Ideal:
+        </Typography>
+        {vases.map(data => (
+          <ConfigButton
+            key={data.name}
+            title={data.name}
+            value={data.value}
+            incrementValue={incrementValueVases}
+            decrementValue={decrementValueVases}
+            sufix="%"
+          />
+        ))}
+      </Grid>
+    </Grid>
   );
 }
 

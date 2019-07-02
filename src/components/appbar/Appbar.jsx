@@ -7,8 +7,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './style';
-import { ThemeProvider } from '@material-ui/styles';
-import theme from '../../Theme';
 import MenuDrawer from '../drawer/MenuDrawer';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -42,7 +40,7 @@ function AppBarView({ classes }) {
   }
 
   return (
-    <ThemeProvider theme={theme}>
+    <div>
       <AppBar position="static" color="primary">
         <Toolbar>
           <IconButton
@@ -95,7 +93,7 @@ function AppBarView({ classes }) {
         </Toolbar>
       </AppBar>
       <MenuDrawer open={open} handleDrawerClose={handleDrawerClose} />
-    </ThemeProvider>
+    </div>
   );
 }
 export default withStyles(styles)(AppBarView);
