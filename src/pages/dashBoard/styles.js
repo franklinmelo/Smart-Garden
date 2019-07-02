@@ -1,4 +1,4 @@
-const styles = () => {
+const styles = theme => {
   return {
     card: {
       width: '40vh',
@@ -9,6 +9,17 @@ const styles = () => {
     body: {
       marginTop: '1rem',
       marginBottom: '1rem'
+    },
+    wrapper: {
+      margin: theme.spacing(1),
+      position: 'relative'
+    },
+    buttonProgress: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12
     }
   };
 };

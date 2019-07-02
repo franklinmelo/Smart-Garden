@@ -5,10 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import PieChart from 'react-minimal-pie-chart';
-import api from '../../service/api';
+import api from '../../services/api';
 import styles from './styles';
 
 function DashBoardView({ classes }) {
@@ -19,24 +19,83 @@ function DashBoardView({ classes }) {
     const getVases = async () => {
       const { data } = await api.get('/vasos');
 
-      setVases(data);
+      const newVases = data.map(item => ({
+        ...item,
+        isLoading: false
+      }));
+
+      setVases(newVases);
       setIsLoading(false);
     };
 
     getVases();
   }, []);
 
-  async function irrigar(pin) {
+  console.log(vases);
+
+  async function irrigar(id) {
+    const vase = vases.find(item => item.id === id);
+
+    setVases(
+      vases.map(item => {
+        if (item.id === id) {
+          return {
+            ...item,
+            isLoading: true
+          };
+        }
+
+        return item;
+      })
+    );
+
+    let isIrrigating;
+    if (vase.pin[1].value === 1) {
+      isIrrigating = 0;
+    } else {
+      isIrrigating = 1;
+    }
+
     const data = {
-      pin: pin.name,
-      value: 1
+      pin: vase.pin[1].name,
+      value: isIrrigating
     };
 
     await api.post('/irrigate', data);
+
+    const newVases = vases.map(item => {
+      if (item.id === id) {
+        return {
+          ...item,
+          isLoading: false,
+          pin: vase.pin.map(item => {
+            if (item.name === vase.pin[1].name) {
+              return {
+                ...item,
+                value: isIrrigating
+              };
+            }
+            return item;
+          })
+        };
+      }
+      return item;
+    });
+
+    setVases(newVases);
   }
 
   if (isLoading) {
-    return <LinearProgress />;
+    return (
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ height: '100vh' }}
+      >
+        <CircularProgress />
+      </Grid>
+    );
   }
 
   return (
@@ -71,14 +130,23 @@ function DashBoardView({ classes }) {
 
             <CardActions>
               <Grid container justify="center">
-                <Button
-                  onClick={e => irrigar(data.pin[1])}
-                  size="large"
-                  color="primary"
-                  variant="outlined"
-                >
-                  IRRIGAR
-                </Button>
+                <div className={classes.wrapper}>
+                  <Button
+                    onClick={() => irrigar(data.id)}
+                    size="large"
+                    color="primary"
+                    variant={data.pin[1].value === 1 ? 'contained' : 'outlined'}
+                    disabled={data.isLoading}
+                  >
+                    {data.pin[1].value === 1 ? 'Irrigando' : 'IRRIGAR'}
+                  </Button>
+                  {data.isLoading && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
               </Grid>
             </CardActions>
           </Card>

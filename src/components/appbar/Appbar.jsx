@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,18 +9,14 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import styles from './style';
 import MenuDrawer from '../drawer/MenuDrawer';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import { isAuthenticated, logout } from 'services/auth';
 
 const SignInLink = React.forwardRef((props, ref) => (
   <Link to="/entrar" innerRef={ref} {...props} />
 ));
 
-function AppBarView({ classes }) {
-  const [login, setLogin] = useState(false);
+function AppBarView({ classes, history }) {
   const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -30,18 +26,10 @@ function AppBarView({ classes }) {
     setOpen(false);
   }
 
-  function logon() {
-    handleClose();
-    setLogin(!login);
-  }
-
-  function handleMenu(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function handleClose() {
-    setAnchorEl(null);
-  }
+  const onLogout = () => {
+    logout();
+    history.push('/entrar');
+  };
 
   return (
     <div>
@@ -61,36 +49,10 @@ function AppBarView({ classes }) {
               Smart Garden
             </Link>
           </Typography>
-          {login ? (
-            <div>
-              <IconButton
-                aria-label="Account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                open={!!anchorEl}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Perfil</MenuItem>
-                <MenuItem onClick={logon}>SAIR</MenuItem>
-              </Menu>
-            </div>
+          {isAuthenticated() ? (
+            <Button onClick={onLogout} color="inherit">
+              Sair
+            </Button>
           ) : (
             <Button component={SignInLink} color="inherit">
               Entrar
@@ -102,4 +64,4 @@ function AppBarView({ classes }) {
     </div>
   );
 }
-export default withStyles(styles)(AppBarView);
+export default withStyles(styles)(withRouter(AppBarView));
