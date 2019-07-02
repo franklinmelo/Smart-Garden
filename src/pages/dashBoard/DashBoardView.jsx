@@ -14,12 +14,6 @@ import styles from './styles';
 function DashBoardView({ classes }) {
   const [vases, setVases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const vasos = [
-    { name: 'VASO 1', valor: 0, color: '#1ff8a6' },
-    { name: 'VASO 2', valor: 15, color: '#515a9d' },
-    { name: 'VASO 3', valor: 34, color: '#00a0c8' },
-    { name: 'VASO 4', valor: 80, color: '#E38627' }
-  ];
 
   useEffect(() => {
     const getVases = async () => {
@@ -31,10 +25,6 @@ function DashBoardView({ classes }) {
 
     getVases();
   }, []);
-
-  useEffect(() => {
-    if (vases.length === 0) setVases(vasos);
-  }, [vases, vasos]);
 
   async function irrigar(pin) {
     const data = {
