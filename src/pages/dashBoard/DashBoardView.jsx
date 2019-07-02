@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { withStyles } from '@material-ui/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 import PieChart from 'react-minimal-pie-chart';
+import api from '../../service/api';
 import styles from './styles';
 
 function DashBoardView({ classes }) {
   const [vases, setVases] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const vasos = [
     { name: 'VASO 1', valor: 0, color: '#1ff8a6' },
     { name: 'VASO 2', valor: 15, color: '#515a9d' },
@@ -19,29 +22,37 @@ function DashBoardView({ classes }) {
   ];
 
   useEffect(() => {
+    const getVases = async () => {
+      const { data } = await api.get('/vasos');
+
+      setVases(data);
+      setIsLoading(false);
+    };
+
+    getVases();
+  }, []);
+
+  useEffect(() => {
     if (vases.length === 0) setVases(vasos);
   }, [vases, vasos]);
 
-  function irrigar(name) {
-    const mock = vases.map(data => {
-      if (data.name === name) {
-        return { ...data, valor: data.valor + 1 };
-      } else {
-        return data;
-      }
-    });
-    setVases(mock);
+  async function irrigar(pin) {
+    const data = {
+      pin: pin.name,
+      value: 1
+    };
+
+    await api.post('/irrigate', data);
+  }
+
+  if (isLoading) {
+    return <LinearProgress />;
   }
 
   return (
-    <Grid
-      container
-      direction="row"
-      justify="space-around"
-      className={classes.body}
-    >
+    <Grid container justify="space-around" className={classes.body}>
       {vases.map(data => (
-        <Grid item key={data.name}>
+        <Grid item key={data.id}>
           <Card className={classes.card}>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
@@ -51,7 +62,11 @@ function DashBoardView({ classes }) {
             <CardContent>
               <PieChart //lib de graficos pizza
                 data={[
-                  { title: data.name, value: data.valor, color: data.color }
+                  {
+                    title: data.name,
+                    value: data.pin[0].value,
+                    color: data.color
+                  }
                 ]} //lista de objetos para serem exibidos no grafico
                 lineWidth={13} //grossura da linha
                 startAngle={120} //angulo em que começa o grafico
@@ -65,9 +80,9 @@ function DashBoardView({ classes }) {
             </CardContent>
 
             <CardActions>
-              <Grid container direction="row" justify="center">
+              <Grid container justify="center">
                 <Button
-                  onClick={e => irrigar(data.name)}
+                  onClick={e => irrigar(data.pin[1])}
                   size="large"
                   color="primary"
                   variant="outlined"
